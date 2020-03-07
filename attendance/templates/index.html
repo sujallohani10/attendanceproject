@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <h1 class="h3 mb-1 text-gray-800">Attendance</h1>
+            <p class="mb-4">Start and End Shifts by clicking buttons.</p>
+            <div class="row">
+
+            <!-- First Column -->
+            <div class="col-lg-4">
+
+              <!-- Custom Text Color Utilities -->
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Start and End your shifts</h6>
+                </div>
+                <div class="card-body">
+                    {# user notification message#}
+                    {% for message in messages %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                          </div>
+                    {% endfor %}
+                    <form class="user" method="post" action="startshift">
+                          {% csrf_token %}
+                        <input type="submit" class="btn btn-primary btn-user btn-block" value="Start Shift">
+                    </form>
+                    <br>
+                    <form class="user" method="post" action="endshift">
+                          {% csrf_token %}
+                        <input type="submit" class="btn btn-outline-danger btn-user btn-block" value="End Shift">
+                    </form>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+    <!-- End Page Content -->
+{% endblock %}
