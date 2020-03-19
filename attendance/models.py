@@ -6,5 +6,11 @@ from django.db import models
 
 class TimeSheet(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    signin_datetime = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
-    signout_datetime = models.DateTimeField(auto_now=False, auto_now_add=False, null=True)
+    date = models.DateField(auto_now=False, auto_now_add=False)
+    time_in = models.TimeField(auto_now=False, auto_now_add=False, null=True)
+    time_out = models.TimeField(auto_now=False, auto_now_add=False, null=True)
+    status = models.IntegerField()
+    num_of_hours = models.FloatField(null=True)
+
+    def __str__(self):
+        return '%s %s %s' % (self.user, self.time_in, self.time_out)

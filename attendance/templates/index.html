@@ -25,6 +25,7 @@
                     {% endfor %}
                     <form class="user" method="post" action="startshift">
                           {% csrf_token %}
+{#                        <input class="datepicker" data-date-format="mm/dd/yyyy">#}
                         <input type="submit" class="btn btn-primary btn-user btn-block" value="Start Shift">
                     </form>
                     <br>

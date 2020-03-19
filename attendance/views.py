@@ -20,7 +20,9 @@ def startShift(request):
     if not request.user.is_authenticated:
         raise Http404
     timesheetObj = TimeSheet()
-    timesheetObj.signin_datetime = datetime.today()
+    timesheetObj.date = date.today()
+    timesheetObj.time_in = datetime.now().time()
+    timesheetObj.status = 1
     timesheetObj.user = request.user
     timesheetObj.save()
     # success message
@@ -36,13 +38,24 @@ def endShift(request):
     # first we need to check if current user has already started shift or not. If started, then only that user can
     # end shift
     today = date.today()
-    cur_user_data = TimeSheet.objects.filter(user=request.user, signin_datetime__contains=today)
+    cur_user_data = TimeSheet.objects.filter(user=request.user, date=today)
 
     # error message for not started shift for today
     if not cur_user_data:
-        messages.info(request, "Shift not started for today!")
+        messages.info(request, "Start shift first!")
     else:
-        cur_user_data.update(signout_datetime=datetime.today())
+        # print(cur_user_data.values())
+        time_in_obj = cur_user_data.values('time_in')
+        time_in = time_in_obj[0]['time_in']
+        time_in_mins = time_in.hour * 60 + time_in.minute  # converting time in minutes
+
+        time_out = datetime.now().time()
+        time_out_mins = time_out.hour * 60 + time_out.minute  # converting time in minutes
+
+        # total hours worked
+        total_hrs = format((time_out_mins - time_in_mins) / 60, '.2f')
+
+        cur_user_data.update(time_out=time_out, num_of_hours = total_hrs)
         # success message
         messages.info(request, "Shift Ended for today Successfully!")
     return redirect('attendance')
