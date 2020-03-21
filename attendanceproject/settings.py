@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'accounts.apps.AccountsConfig',
+    'employee.apps.EmployeeConfig',
     'attendance.apps.AttendanceConfig',
     'django.contrib.admin',
     'django.contrib.auth',
