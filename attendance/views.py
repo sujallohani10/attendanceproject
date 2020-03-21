@@ -55,11 +55,15 @@ def endShift(request):
         # total hours worked
         total_hrs = format((time_out_mins - time_in_mins) / 60, '.2f')
 
-        cur_user_data.update(time_out=time_out, num_of_hours = total_hrs)
+        cur_user_data.update(time_out=time_out, num_of_hours=total_hrs)
         # success message
         messages.info(request, "Shift Ended for today Successfully!")
     return redirect('attendance')
 
+
 def timeSheet(request):
-    # User can view the timesheet of own
-    pass
+    timesheetData = TimeSheet.objects.filter(user=request.user);
+
+    print(timesheetData)
+
+    return render(request, 'timesheet.html', {'timesheetData': timesheetData})
