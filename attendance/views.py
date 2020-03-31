@@ -19,14 +19,20 @@ def startShift(request):
     # check user is authenticated or not
     if not request.user.is_authenticated:
         raise Http404
-    timesheetObj = TimeSheet()
-    timesheetObj.date = date.today()
-    timesheetObj.time_in = datetime.now().time()
-    timesheetObj.status = 1
-    timesheetObj.user = request.user
-    timesheetObj.save()
-    # success message
-    messages.info(request, "Shift Started Successfully!")
+    today = date.today()
+    cur_user_data = TimeSheet.objects.filter(user=request.user, date=today)
+
+    if cur_user_data:
+        messages.warning(request, "Checked in Already!")
+    else:
+        timesheetObj = TimeSheet()
+        timesheetObj.date = today
+        timesheetObj.time_in = datetime.now().time()
+        timesheetObj.status = 1
+        timesheetObj.user = request.user
+        timesheetObj.save()
+        # success message
+        messages.info(request, "Shift Started Successfully!")
     return redirect('attendance')
 
 
@@ -40,9 +46,9 @@ def endShift(request):
     today = date.today()
     cur_user_data = TimeSheet.objects.filter(user=request.user, date=today)
 
-    # error message for not started shift for today
+    # warning message for not started shift for today
     if not cur_user_data:
-        messages.info(request, "Start shift first!")
+        messages.warning(request, "Start shift first!")
     else:
         # print(cur_user_data.values())
         time_in_obj = cur_user_data.values('time_in')
